@@ -1,0 +1,10 @@
+(asdf:defsystem :youtube
+  :description "Play youtube urls with or without video using mpv"
+  :author "Mihai Olteanu <mihai_olteanu@fastmail.fm>"
+  :license  "GPLv3"
+  :version "0.1"
+  :depends-on (:alexandria
+               :yason)
+  :serial t
+  :components ((:file "package")
+               (:file "youtube")))
