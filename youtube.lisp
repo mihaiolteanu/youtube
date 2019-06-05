@@ -3,21 +3,48 @@
 (defparameter *socket* "/tmp/mpv-cl-socket")
 (defparameter *playing-url* nil)
 
-(defun play (youtube-url &key (video nil) (pos "0"))
-  "Play the youtube url through mpv with audio only or with video."
-  (set-playing-url youtube-url)
-  (run-program
-   (concatenate 'string
-                "mpv --ytdl-format=best --input-ipc-server="
-                *socket* " "
-                (unless video
-                  "--vid=no ")
-                youtube-url
-                "\\&feature=youtu.be\\&t="
-                pos))
+(defun youtube-url-p (url-or-song)
+  "Decide if the string is a youtube url and return it back if it is."
+  (and (or (scan-to-strings "youtube\.com" url-or-song)
+           (scan-to-strings "youtu\.be" url-or-song))
+       url-or-song))
+
+(defun url-from-string (str)
+  "Use youtube-dl to search for a youtube url based on the input string.
+The --get-url option returns a nasty url. --get-thumbnail returns a url that
+contains the url id we're interested it."
+  (let ((url-id nil))
+    (with-output-to-string (out)
+      (run-program
+       (format nil
+               "youtube-dl --get-thumbnail \"ytsearch:~a\""
+               str)
+       :output out)
+      (let* ((thumb-url (get-output-stream-string out))
+             (partial-id (scan-to-strings "/vi/.*/" thumb-url)))
+        (setf url-id (subseq partial-id 4 (- (length partial-id) 1)))))
+    (format nil "https://www.youtube.com/watch?v=~a" url-id)))
+
+(defun play (url-or-song &key (video nil) (pos "0"))
+  "Play the youtube url through mpv. If video is T, open the video with mpv
+player, if not, run mpv in the background. If position is specified, in seconds,
+start playback from there."
+  (let ((url (or (youtube-url-p url-or-song)
+                 (url-from-string url-or-song))))
+    (set-playing-url url)
+    (run-program
+     (concatenate 'string
+                  "mpv --ytdl-format=best --input-ipc-server="
+                  *socket* " "
+                  (unless video
+                    "--vid=no ")
+                  url
+                  "\\&feature=youtu.be\\&t=" pos)))
+  ;; After mpv finishes and closes, run-program returns and nothing is playing.
   (clear-playing-url))
 
 (defun turn-video-on ()
+  "Quit mpv and restart it in video mode."
   (let ((url (playing-url))
         (pos (time-pos)))
     (quit)
