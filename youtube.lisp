@@ -3,7 +3,7 @@
 (defparameter *socket* "/tmp/mpv-cl-socket")
 (defparameter *playing-url* nil)
 
-(defun play (youtube-url &key (video nil))
+(defun play (youtube-url &key (video nil) (pos "0"))
   "Play the youtube url through mpv with audio only or with video."
   (set-playing-url youtube-url)
   (run-program
@@ -12,14 +12,20 @@
                 *socket* " "
                 (unless video
                   "--vid=no ")
-                youtube-url))
+                youtube-url
+                "\\&feature=youtu.be\\&t="
+                pos))
   (clear-playing-url))
 
 (defun turn-video-on ()
   (let ((url (playing-url))
         (pos (time-pos)))
     (quit)
-    (play url :video t)))
+    ;wait for mpv to close and url to be cleared, otherwise, the clearing of the
+    ;url might happen after playing the video which would result in a state
+    ;where there is no playing url but mpv is running.
+    (sleep 1)                           
+    (play url :video t :pos pos)))
 
 (defun send-command (&rest args)
   (when (running-p)
