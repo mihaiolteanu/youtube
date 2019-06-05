@@ -15,13 +15,11 @@
                 youtube-url))
   (clear-playing-url))
 
-(defun turn-video-on (&key (from-beginning nil))
+(defun turn-video-on ()
   (let ((url (playing-url))
         (pos (time-pos)))
     (quit)
-    (play url :video t)
-    (unless from-beginning
-      (seek pos))))
+    (play url :video t)))
 
 (defun send-command (&rest args)
   (when (running-p)
