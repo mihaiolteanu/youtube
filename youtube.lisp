@@ -77,8 +77,8 @@ playing."
   (get-property "percent-pos"))
 
 (defun time-pos ()
-  "Current playing song position, in seconds."
-  (round (get-property "time-pos")))
+  "Current playing song position, in seconds, as string."
+  (write-to-string (round (get-property "time-pos"))))
 
 (defun switch-to-browser (&key (from-beginning nil))
   (pause)              ;don't want mpv and youtube to both run at the same time
@@ -87,7 +87,7 @@ playing."
                 (unless from-beginning
                   (concatenate
                    'string "&feature=youtu.be&t="
-                   (write-to-string (time-pos))
+                   (time-pos)
                    ;; url for xdg-open must be surrounded by quotes
                    "\"")))))
 
