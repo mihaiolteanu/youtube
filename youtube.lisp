@@ -43,17 +43,6 @@ start playback from there."
   ;; After mpv finishes and closes, run-program returns and nothing is playing.
   (clear-playing-url))
 
-(defun turn-video-on ()
-  "Quit mpv and restart it in video mode."
-  (let ((url (playing-url))
-        (pos (time-pos)))
-    (quit)
-    ;wait for mpv to close and url to be cleared, otherwise, the clearing of the
-    ;url might happen after playing the video which would result in a state
-    ;where there is no playing url but mpv is running.
-    (sleep 1)                           
-    (play url :video t :pos pos)))
-
 (defun send-command (&rest args)
   (when (running-p)
     (parse
@@ -113,16 +102,30 @@ playing."
   "Current playing song position, in seconds, as string."
   (write-to-string (round (get-property "time-pos"))))
 
+(defun turn-video-on ()
+  "Quit mpv and restart it in video mode."
+  (let ((url (playing-url))
+        (pos (time-pos)))
+    (quit)
+    ;wait for mpv to close and url to be cleared, otherwise, the clearing of the
+    ;url might happen after playing the video which would result in a state
+    ;where there is no playing url but mpv is running.
+    (sleep 1)                           
+    (bt:make-thread
+     (lambda ()
+       (play url :video t :pos pos)))))
+
 (defun switch-to-browser (&key (from-beginning nil))
   (pause)              ;don't want mpv and youtube to both run at the same time
-  (run-program (concatenate
-                'string  "xdg-open \"" (playing-url)
-                (unless from-beginning
-                  (concatenate
-                   'string "&feature=youtu.be&t="
-                   (time-pos)
-                   ;; url for xdg-open must be surrounded by quotes
-                   "\"")))))
+  (launch-program
+   (concatenate
+    'string  "xdg-open \"" (playing-url)
+    (unless from-beginning
+      (concatenate
+       'string "&feature=youtu.be&t="
+       (time-pos)
+       ;; url for xdg-open must be surrounded by quotes
+       "\"")))))
 
 (defun quit ()
   (send-command "quit")
