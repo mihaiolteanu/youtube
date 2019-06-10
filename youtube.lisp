@@ -107,7 +107,7 @@ playing."
   (write-to-string (round (get-property "duration"))))
 
 (defun turn-video-on ()
-  "Quit mpv and restart it in video mode."
+  "Quit mpv and restart it in video mode, locally (i.e. not in the browser)"
   (let ((url (playing-url))
         (pos (time-pos)))
     (quit)
@@ -120,6 +120,9 @@ playing."
        (play url :video t :pos pos)))))
 
 (defun switch-to-browser (&key (from-beginning nil))
+  "Pause the player and open the youtube page of the current playing song in the
+user default browser. If from-beginning is T, start playing from the beginning,
+otherwise continue from where the player was. "
   (pause)              ;don't want mpv and youtube to both run at the same time
   (launch-program
    (concatenate
@@ -132,5 +135,6 @@ playing."
        "\"")))))
 
 (defun quit ()
+  "Stop the playback."
   (send-command "quit")
   (clear-playing-url))
