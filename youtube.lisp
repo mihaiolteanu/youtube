@@ -102,6 +102,10 @@ playing."
   "Current playing song position, in seconds, as string."
   (write-to-string (round (get-property "time-pos"))))
 
+(defun duration ()
+  "Current playing song duration, in MM:SS format, as string."
+  (write-to-string (round (get-property "duration"))))
+
 (defun turn-video-on ()
   "Quit mpv and restart it in video mode."
   (let ((url (playing-url))
