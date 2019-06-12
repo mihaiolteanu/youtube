@@ -11,6 +11,11 @@ Make sure you have [mpv](https://mpv.io/) and
 git clone https://github.com/mihaiolteanu/youtube ~/quicklisp/local-projects/youtube
 ```
 
+```common-lisp
+; Register the new project
+(ql:register-local-projects)
+```
+
 # Usage
 
 ```common-lisp
