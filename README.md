@@ -45,7 +45,8 @@ details.
    
     Play the youtube url through mpv. If `video` is T, open the video with mpv
     player, if not, run mpv in the background. If position is specified, in seconds,
-    start playback from there.
+    start playback from there. If the youtube link is valid but the video is
+    unavailable for some reason, return nil and don't play anything.
 
 **play/pause**
   
