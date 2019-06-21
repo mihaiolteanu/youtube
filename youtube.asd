@@ -4,6 +4,7 @@
   :license  "GPLv3"
   :version "0.1"
   :depends-on (:alexandria
+               :bordeaux-threads
                :yason
                :cl-ppcre)
   :serial t

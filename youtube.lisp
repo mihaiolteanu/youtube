@@ -121,7 +121,7 @@ playing."
     ;url might happen after playing the video which would result in a state
     ;where there is no playing url but mpv is running.
     (sleep 1)                           
-    (bt:make-thread
+    (make-thread
      (lambda ()
        (play url :video t :pos pos)))))
 
