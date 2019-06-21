@@ -42,8 +42,9 @@ start playback from there."
                       url
                       "\\&feature=youtu.be\\&t=" pos))
       (uiop/run-program:subprocess-error (e)
-        ;; Even though the youtube url is valid, some vides are not just
-        ;; available; mpv just crashes in this case; ignore it and move along
+        (declare (ignore e))
+        ;; Even though the youtube url is valid, some videos are not available;
+        ;; mpv just crashes in this case; ignore it and move along
         (set-playing-url nil)
         nil)))
   ;; After mpv finishes and closes, run-program returns and nothing is playing.
