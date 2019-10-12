@@ -1,26 +1,16 @@
 # youtube
 Play songs from youtube given a youtube url or a search string. Uses youtube-dl and the mpv player.
 
-# Installation
-
-Make sure you have [mpv](https://mpv.io/) and
-[youtube-dl](https://github.com/ytdl-org/youtube-dl) installed.
-
-```bash
-# clone to local-projects for quickload access
-git clone https://github.com/mihaiolteanu/youtube ~/quicklisp/local-projects/youtube
-```
-
-```common-lisp
-; Register the new project
-(ql:register-local-projects)
-```
-
-# Usage
+# Install
 
 ```common-lisp
 (ql:quickload :youtube)
 ```
+
+Install the [mpv](https://mpv.io/) player and
+[youtube-dl](https://github.com/ytdl-org/youtube-dl).
+
+# Usage
 
 Play a known url
 ```common-lisp
