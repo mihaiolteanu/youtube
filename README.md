@@ -7,7 +7,8 @@ Play songs from youtube given a youtube url or a search string. Uses youtube-dl 
 (ql:quickload :youtube)
 ```
 
-Install the [mpv](https://mpv.io/) player and
+Install the [mpv](https://mpv.io/) player,
+[socat](https://linux.die.net/man/1/socat) and
 [youtube-dl](https://github.com/ytdl-org/youtube-dl).
 
 # Usage
